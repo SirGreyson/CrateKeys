@@ -1,0 +1,12 @@
+name: CrateKeys
+version: 0.5
+description: Crate plugin for Chaotic Prison
+author: SirReason
+ 
+main: net.chaoticprison.cratekeys.CrateKeys
+
+commands:
+  cratekey:
+    description: Cratekey command
+    permission: op
+    usage: Syntax error! Usage /cratekey give|addcrate 
