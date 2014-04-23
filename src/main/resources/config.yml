@@ -1,15 +1,27 @@
 hero:
+  #Prefix for prize package broadcasts
   broadcastPrefix: '&c[Tier 1] '
+  #Display name of key item
   keyName: '&5[Hero Key]'
+  #List of Lore to add to key item
   keyLore:
   - '&eUse this key to unlock a Hero crate!'
   - '&aJust &6right-click&a a Hero chest to open it!'
+  #Enchantment to add to key item (Enchantment:Level)
+  #Enchantments can be found here: http://jd.bukkit.org/rb/doxygen/dd/d17/classorg_1_1bukkit_1_1enchantments_1_1Enchantment.html
   keyEnchantment: DURABILITY:10
+  #Material to make key item 
+  #Materials can be found here: http://jd.bukkit.org/rb/doxygen/d6/d0e/enumorg_1_1bukkit_1_1Material.html
   keyMaterial: EMERALD
+  #Sound to play for player when a key is used
+  #Sounds can be found here: http://jd.bukkit.org/rb/doxygen/d3/dfe/enumorg_1_1bukkit_1_1Sound.html
   keySound: ANVIL_USE
-  crateLocations: []
+  #List of crate locations for this tier
+  crateLocations:
+  - 170,69,194,world
   prizePackages:
     '0':
+      avoidPermission: 'NONE'
       percent: 10
       playerMessage: '&bCongratulations on opening a Hero chest!'
       broadcastMessage:
@@ -19,6 +31,7 @@ hero:
       - sudo %player% me is happy!
       - msg %player% &2Congratulations on your chest opening!
     '1':
+      avoidPermission: 'essentials.me'
       percent: 40
       playerMessage: '&bCongratulations on opening a Hero chest, &e%player%&b!'
       broadcastMessage:
@@ -28,6 +41,7 @@ hero:
       - sudo %player% me is really happy with all these diamonds!
       - give %player% diamond 64
     '2':
+      avoidPermission: 'NONE'
       percent: 60
       playerMessage: '&aCongratulations! Too bad you didnt win anything good...'
       broadcastMessage:

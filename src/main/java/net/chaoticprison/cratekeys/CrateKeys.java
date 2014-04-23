@@ -6,7 +6,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -94,6 +93,8 @@ public class CrateKeys extends JavaPlugin implements Listener, CommandExecutor {
 
         public void executeRandomPrize(Player player) {
             PrizePackage prizePackage = randomCollection.next();
+            if(prizePackage.getAvoidPermission() != null && !prizePackage.getAvoidPermission().equalsIgnoreCase("NONE") && player.hasPermission(prizePackage.getAvoidPermission()))
+                while(player.hasPermission(prizePackage.getAvoidPermission())) prizePackage = randomCollection.next();
             if(prizePackage.getPlayerMessage(false) != null && !prizePackage.getPlayerMessage(false).equalsIgnoreCase("NONE")) player.sendMessage(prizePackage.getPlayerMessage(true).replace("%player%", player.getName()));
             if(prizePackage.getBroadcastMessage() != null && !prizePackage.getBroadcastMessage().isEmpty())
                 for(String message : prizePackage.getBroadcastMessage()) player.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', broadcastPrefix + message.replace("%player%", player.getName())));
@@ -116,14 +117,16 @@ public class CrateKeys extends JavaPlugin implements Listener, CommandExecutor {
 
         private Tier tier;
         private int packageID;
+        private String avoidPermission;
         private int percentageChance;
         private String playerMessage;
         private List<String> broadcastMessage;
         private List<String> commands;
 
-        public PrizePackage(Tier tier, int packageID, int percentageChance, String playerMessage, List<String> broadcastMessage, List<String> commands) {
+        public PrizePackage(Tier tier, int packageID, String avoidPermission, int percentageChance, String playerMessage, List<String> broadcastMessage, List<String> commands) {
             this.tier = tier;
             this.packageID = packageID;
+            this.avoidPermission = avoidPermission;
             this.percentageChance = percentageChance;
             this.playerMessage = playerMessage;
             this.broadcastMessage = broadcastMessage;
@@ -137,6 +140,8 @@ public class CrateKeys extends JavaPlugin implements Listener, CommandExecutor {
         public int getPackageID() {
             return packageID;
         }
+
+        public String getAvoidPermission() { return avoidPermission; }
 
         public int getPercentageChance() {
             return percentageChance;
@@ -195,8 +200,8 @@ public class CrateKeys extends JavaPlugin implements Listener, CommandExecutor {
             for(String crateLoc : tierC.getStringList("crateLocations")) tierMap.get(tierID).addCrateLocation(parseLocString(crateLoc));
             for(String packageID : tierC.getConfigurationSection("prizePackages").getKeys(false)) {
                 ConfigurationSection packageC = tierC.getConfigurationSection("prizePackages." + packageID);
-                tierMap.get(tierID).addPrizePackage(new PrizePackage(tierMap.get(tierID), Integer.parseInt(packageID), packageC.getInt("percent"), packageC.getString("playerMessage"),
-                        packageC.getStringList("broadcastMessage"), packageC.getStringList("commands")));
+                tierMap.get(tierID).addPrizePackage(new PrizePackage(tierMap.get(tierID), Integer.parseInt(packageID), packageC.getString("avoidPermission"), packageC.getInt("percent"),
+                        packageC.getString("playerMessage"), packageC.getStringList("broadcastMessage"), packageC.getStringList("commands")));
             }
         } /**Tiers and Prize Packages loaded!**/
 
